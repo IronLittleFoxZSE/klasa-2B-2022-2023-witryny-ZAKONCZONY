@@ -95,6 +95,30 @@
             }
             FunkcjaPetlowa();
             //document.writeln(i);
+
+            function FunkcjaDwaParametry(parametr, parametr2)
+            {
+                document.writeln(parametr);
+                document.writeln("<br/>");
+                document.writeln(parametr2);
+                document.writeln("<br/>");
+            }
+            FunkcjaDwaParametry("Ala ma kota", 12345);
+            FunkcjaDwaParametry("Kot ma Ale");
+            FunkcjaDwaParametry();
+
+            function Suma(liczbaPierwsza, liczbaDruga)
+            {
+                var wynik;
+                wynik = liczbaPierwsza + liczbaDruga;
+                return wynik;
+            }
+
+            var wynikFunkcji = Suma(15, 0);
+            document.writeln(wynikFunkcji);
+            document.writeln("<br/>");
+
+
         </script>
     </body>
 </html>
