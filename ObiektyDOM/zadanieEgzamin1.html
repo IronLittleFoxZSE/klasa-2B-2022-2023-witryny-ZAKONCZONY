@@ -9,7 +9,7 @@
         <p>Podaj wiek</p>
         <input type="text"/>
         <br/>
-        <input type="button" value="Działaj"/>
+        <input type="button" value="Działaj" onclick="nazwaTechniczna()"/>
         <br/>
         <div>Tutaj po naciśnięciu przycisku ma pojawić się:
             * jesli walidacja przejdzie poprawnie:
@@ -33,6 +33,18 @@
         </div>
 
         <script>
+
+            function nazwaTechniczna()
+            {
+                if (ValidacjaPrzeszlaPoprawnie())
+                {
+                    //wyświetlam informacje w obu divach
+                }
+                else
+                {
+                    //wyświetlam informacje o błędach
+                }
+            }
             
         </script>
     </body>
