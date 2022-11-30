@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html onmousemove="increaseCounter()">
     <head>
         <title>Przykładowy program</title>
     </head>
     <body>
+        <div id="counterId"></div>
         <script>
+            let counter = 0;
+            function increaseCounter()
+            {
+                document.getElementById("counterId").innerText = counter++;
+            }
+
             function ChangeText()
             {
                 let elementNewText = document.getElementById("newText");
