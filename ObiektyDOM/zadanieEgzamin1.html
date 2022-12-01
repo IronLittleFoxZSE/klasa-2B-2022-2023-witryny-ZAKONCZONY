@@ -5,19 +5,19 @@
     </head>
     <body>
         <p>Podaj imię:</p>
-        <input type="text"/>
+        <input type="text" id="nameId"/>
         <p>Podaj wiek</p>
-        <input type="text"/>
+        <input type="text" id="ageId"/>
         <br/>
-        <input type="button" value="Działaj" onclick="nazwaTechniczna()"/>
+        <input type="button" value="Wyświetl informację" onclick="getInfo()"/>
         <br/>
-        <div>Tutaj po naciśnięciu przycisku ma pojawić się:
+        <div id="helloId">Tutaj po naciśnięciu przycisku ma pojawić się:
             * jesli walidacja przejdzie poprawnie:
                 "Witaj 'imie' na stronie" - gdzie 'imie' jest to wartość z pola wprowadzanego
             * jeśli walidacja nie przejdzie poprawnie:
                 to powinien znaleść się odpowiedni komunikat informujący co jest nie tak
         </div>
-        <div>
+        <div id="legalAgeId">
             Tutaj po naciśnięciu przycisku ma pojawić się:
             * jesli walidacja przejdzie poprawnie:
                 "Jesteś pełnoletni/niepełnoletni" - w zależności od wieku
@@ -25,25 +25,147 @@
                 nic
         </div>
 
-        <div>Zasady:
-            * DRY - don't repeat yourself
-            * KISS - Keep it simple stupid
-            * YAGNI - You aren't gonna need it
-            * SOLID - S - Single responsibility principle 
+        <br/>
+        <div>Zasady:<br/>
+            * Poprawne formatowanie kodu<br/>
+            * Czytelność identyfikatorów<br/>
+            * DRY - don't repeat yourself<br/>
+            * KISS - Keep it simple stupid<br/>
+            * YAGNI - You aren't gonna need it<br/>
+            * SOLID - S - Single responsibility principle <br/>
         </div>
 
         <script>
 
-            function nazwaTechniczna()
+            function getInfo()
             {
-                if (ValidacjaPrzeszlaPoprawnie())
+                let validateReturn = Validate();
+                if (validateReturn.pass)
                 {
-                    //wyświetlam informacje w obu divach
+                    showInfo();
                 }
                 else
                 {
-                    //wyświetlam informacje o błędach
+                    showError(validateReturn);
                 }
+            }
+
+            function showInfo()
+            {
+                let helloObject = document.getElementById("helloId");
+                let legalAgeObject = document.getElementById("legalAgeId");
+                let nameObject = document.getElementById("nameId");
+                let ageObject = document.getElementById("ageId");
+
+                helloObject.innerHTML = "Witaj " + nameObject.value + " na stronie."
+
+                legalAgeObject.innerHTML=convertAgeToLegalAge(ageObject.value);
+            }
+
+            function convertAgeToLegalAge(text)
+            {
+                let age = parseInt(text);
+                return age > 17 ? "Jesteś pełnoletni":"Jesteś niepełnoletni";
+            }
+
+            function showError(validateReturn)
+            {
+                let helloObject = document.getElementById("helloId");
+                let legalAgeObject = document.getElementById("legalAgeId");
+                helloObject.innerHTML = validateReturn.message;
+                legalAgeObject.innerHTML="";
+            }
+
+            function WalidateReturn(message, pass)
+            {
+                this.message=message;
+                this.pass=pass;
+            }
+
+            function Validate()
+            {
+                let validateReturn = ValidateName("nameId");
+                if (!validateReturn.pass)
+                    return validateReturn;
+                    validateReturn = ValidateAge("ageId");
+                if (!validateReturn.pass)
+                    return validateReturn;
+                
+                return validateReturn;
+            }
+
+            function ValidateName(id)
+            {
+                let nameObject = document.getElementById(id);
+                let validateReturn = ValidateIsUndefinedOrEmpty(nameObject.value);
+                if (!validateReturn.pass)
+                {
+                    validateReturn.message = "Imię: " + validateReturn.message;
+                    return validateReturn;
+                }
+                return validateReturn;
+            }
+
+            function ValidateIsUndefinedOrEmpty(text)
+            {
+                let validateReturn = new WalidateReturn("", true);
+                if (text == undefined || text == "")
+                {
+                    validateReturn.message="Wartość pusta";
+                    validateReturn.pass=false;
+                    return validateReturn;
+                }
+                return validateReturn;
+            }
+
+            function ValidateIsNumber(text)
+            {
+                let validateReturn = new WalidateReturn("", true);
+                if (isNaN(parseInt(text)))
+                {
+                    validateReturn.message="Wartość nie jest liczbą";
+                    validateReturn.pass=false;
+                    return validateReturn
+                }
+                return validateReturn;
+            }
+
+            function ValidateNumberRange(text, min,max)
+            {
+                let validateReturn = new WalidateReturn("", true);
+                let number = parseInt(text);
+                if (number < min || number > max)
+                {
+                    validateReturn.message="Wartość jest spoza zakresu <" + min + " ; " + max + ">";
+                    validateReturn.pass=false;
+                    return validateReturn;
+                }
+                return validateReturn;
+            }
+
+            function ValidateAge(id)
+            {
+                let ageObject = document.getElementById(id);
+                let validateReturn = ValidateIsUndefinedOrEmpty(ageObject.value);
+                if (!validateReturn.pass)
+                {
+                    validateReturn.message = "Wiek: " + validateReturn.message;
+                    return validateReturn;
+                }
+                validateReturn = ValidateIsNumber(ageObject.value);
+                if (!validateReturn.pass)
+                {
+                    validateReturn.message = "Wiek: " + validateReturn.message;
+                    return validateReturn;
+                }
+
+                validateReturn = ValidateNumberRange(ageObject.value, 1, 130);
+                if (!validateReturn.pass)
+                {
+                    validateReturn.message = "Wiek: " + validateReturn.message;
+                    return validateReturn;
+                }
+                return validateReturn;
             }
             
         </script>
