@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Przykładowy program</title>
+    </head>
+    <body>
+        <p>Podaj imię:</p>
+        <input type="text" id="nameId"/>
+        <p>Podaj wiek</p>
+        <input type="text" id="ageId"/>
+        <br/>
+        <input type="button" value="Wyświetl informację" onclick="getInfo()"/>
+        <br/>
+        <div id="helloId">Tutaj po naciśnięciu przycisku ma pojawić się:
+            * jesli walidacja przejdzie poprawnie:
+                "Witaj 'imie' na stronie" - gdzie 'imie' jest to wartość z pola wprowadzanego
+            * jeśli walidacja nie przejdzie poprawnie:
+                to powinien znaleść się odpowiedni komunikat informujący co jest nie tak
+        </div>
+        <div id="legalAgeId">
+            Tutaj po naciśnięciu przycisku ma pojawić się:
+            * jesli walidacja przejdzie poprawnie:
+                "Jesteś pełnoletni/niepełnoletni" - w zależności od wieku
+            * jeśli walidacja nie przejdzie poprawnie: 
+                nic
+        </div>
+
+        <br/>
+        <div>Zasady:<br/>
+            * Poprawne formatowanie kodu<br/>
+            * Czytelność identyfikatorów<br/>
+            * DRY - don't repeat yourself<br/>
+            * KISS - Keep it simple stupid<br/>
+            * YAGNI - You aren't gonna need it<br/>
+            * SOLID - S - Single responsibility principle <br/>
+        </div>
+
+        <script>
+            //lukasz.felisek@ezse.pl
+            function getInfo()
+            {
+                let name = document.getElementById("nameId").value;
+                let age = document.getElementById("ageId").value;
+                let helloTag = document.getElementById("helloId");
+                let legalAgeTag = document.getElementById("legalAgeId");
+
+                Clear(helloTag, legalAgeTag);
+
+                if (Validate(name, age, helloTag))
+                    ShowInfo(name, age, helloTag, legalAgeTag);
+            }
+
+            function ShowInfo(name, age, helloTag, legalAgeTag)
+            {
+                helloTag.innerText = "Witaj "+ name + " na stronie";
+                legalAgeTag.innerText = "Jesteś " + (age >=18? "pełnoletni":"niepełnoletni");
+            }
+
+            function Clear(helloTag, legalAgeTag)
+            {
+                helloTag.innerText = "";
+                legalAgeTag.innerText = "";
+            }
+
+            function Validate(name, age, helloTag)
+            {
+                if (!ValidateName(name, helloTag))
+                {
+                    return false;
+                }
+                if (!ValidateAge(age))
+                    return false;
+
+                return true;
+            }
+
+            function ValidateName(name, helloTag)
+            {
+                if (name == "")
+                {
+                    helloTag.innerText = "Nie podano imienia."
+                    return false;
+                }
+                return true;
+            }
+
+            function ValidateAge(age, helloTag)
+            {
+                if (age == "")
+                {
+                    helloTag.innerText = "Nie podano wieku."
+                    return false;
+                }
+                if (isNaN(parseInt(age))) 
+                {
+                    helloTag.innerText = "Wiek nie jest liczbą"
+                    return false;
+                }
+
+                if (age < 0 || age > 130)
+                {
+                    helloTag.innerText = "Wiek jest spoza zakresu <0;130>"
+                    return false;
+                }
+                return true;
+            }
+            
+        </script>
+    </body>
+</html>
