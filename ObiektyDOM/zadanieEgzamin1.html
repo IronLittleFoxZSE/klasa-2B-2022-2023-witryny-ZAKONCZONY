@@ -167,6 +167,58 @@
                 }
                 return validateReturn;
             }
+
+            function ValidateObject()
+            {
+                this.Validators = new Array();
+                this.AddVaildator = function (v)
+                {
+                    this.Validators.push(v)
+                }
+                this.Validate = function ()
+                {
+                    this.Validators.forEach(element => {
+                        let v = element()
+                    });
+                }
+            }
+
+            function Validator(data)
+            {
+                this.data = data;
+                this.SpecyficValidator = new Array();
+                this.AddSpecyficVaildator = function(v)
+                {
+                    this.SpecyficValidator.push(v);
+                }
+                this.Validate = function()
+                {
+                    let validateReturn = new ValidateReturn(true,"");
+                    SpecyficValidator.forEach(element =>
+                    {
+                        let vr = element.validate(this.data);
+                        if (!vr.Pass)
+                            return vr;
+                    })
+                }
+            }
+
+            function ValidatorDataIsEmpty(data)
+            {
+                let validateReturn = new ValidateReturn(true,"");
+                if (data == "")
+                {
+                    validateReturn.Pass = false;
+                    validateReturn.Message = "Pole jest puste";
+                }
+                return validateReturn;
+            }
+
+            function ValidateReturn(pass, message)
+            {
+                this.Pass = pass;
+                this.Message = message;
+            }
             
         </script>
     </body>

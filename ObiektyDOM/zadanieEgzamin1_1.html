@@ -8,6 +8,8 @@
         <input type="text" id="nameId"/>
         <p>Podaj wiek</p>
         <input type="text" id="ageId"/>
+        <p>Podaj adres zamieszkania</p>
+        <input type="text" id="addressId"/>
         <br/>
         <input type="button" value="Wyświetl informację" onclick="getInfo()"/>
         <br/>
@@ -37,23 +39,35 @@
 
         <script>
             //lukasz.felisek@ezse.pl
+            
+
             function getInfo()
             {
-                let name = document.getElementById("nameId").value;
+                let name = document.getElementById("nameId").value; 
                 let age = document.getElementById("ageId").value;
+                let address = document.getElementById("addressId").value;
                 let helloTag = document.getElementById("helloId");
                 let legalAgeTag = document.getElementById("legalAgeId");
 
                 Clear(helloTag, legalAgeTag);
 
-                if (Validate(name, age, helloTag))
+                let validateReturn = Validate(name, age, address);
+                if (validateReturn.Pass)
                     ShowInfo(name, age, helloTag, legalAgeTag);
+                else
+                    ShowError(helloTag, validateReturn);
+            }
+
+            function ShowError(helloTag, validateReturn)
+            {
+                helloTag.innerText = validateReturn.Message;
+                //alert("");
             }
 
             function ShowInfo(name, age, helloTag, legalAgeTag)
             {
                 helloTag.innerText = "Witaj "+ name + " na stronie";
-                legalAgeTag.innerText = "Jesteś " + (age >=18? "pełnoletni":"niepełnoletni");
+                legalAgeTag.innerText = "Jesteś " + (age >= 18 ? "pełnoletni" : "niepełnoletni");
             }
 
             function Clear(helloTag, legalAgeTag)
@@ -62,48 +76,108 @@
                 legalAgeTag.innerText = "";
             }
 
-            function Validate(name, age, helloTag)
+            function ValidateReturn(pass, message)
             {
-                if (!ValidateName(name, helloTag))
-                {
-                    return false;
-                }
-                if (!ValidateAge(age))
-                    return false;
+                this.Pass = pass;
+                this.Message = message;
+            }
 
-                return true;
+            function Validate(name, age, address)
+            {
+                let validateReturn = ValidateName(name);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                validateReturn = ValidateAge(age);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                validateReturn = ValidateAddress(address);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                return validateReturn;
             }
 
             function ValidateName(name, helloTag)
             {
+                let validateReturn = NameIsEmpty(name);
+                return validateReturn;
+            }
+
+            function NameIsEmpty(name)
+            {
+                let validateReturn = new ValidateReturn(true, "");
                 if (name == "")
                 {
-                    helloTag.innerText = "Nie podano imienia."
-                    return false;
+                    validateReturn.Message = "Nie podano imienia."
+                    validateReturn.Pass = false;
                 }
-                return true;
+                return validateReturn;
             }
 
-            function ValidateAge(age, helloTag)
+            function ValidateAge(age)
             {
+                let validateReturn = AgeIsNotEmpty(age);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                validateReturn = AgeIsNotNumber(age);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                validateReturn = AgeIsInRange(age);
+                if (!validateReturn.Pass)
+                    return validateReturn;
+
+                return validateReturn;
+            }
+
+            function AgeIsNotEmpty(age)
+            {
+                let validateReturn = new ValidateReturn(true, "");
                 if (age == "")
                 {
-                    helloTag.innerText = "Nie podano wieku."
-                    return false;
+                    validateReturn.Message = "Nie podano wieku."
+                    validateReturn.Pass = false;
                 }
+                return validateReturn;
+            }
+
+            function AgeIsNotNumber(age)
+            {
+                let validateReturn = new ValidateReturn(true, "");
                 if (isNaN(parseInt(age))) 
                 {
-                    helloTag.innerText = "Wiek nie jest liczbą"
-                    return false;
+                    validateReturn.Message = "Wiek nie jest liczbą"
+                    validateReturn.Pass = false;
                 }
+                return validateReturn;
+            }
 
+            function AgeIsInRange(age, helloTag)
+            {
+                let validateReturn = new ValidateReturn(true, "");
                 if (age < 0 || age > 130)
                 {
-                    helloTag.innerText = "Wiek jest spoza zakresu <0;130>"
-                    return false;
+                    validateReturn.Message = "Wiek jest spoza zakresu <0;130>"
+                    validateReturn.Pass = false;
                 }
-                return true;
+                return validateReturn;
             }
+
+            function ValidateAddress(address, helloTag)
+            {
+                let validateReturn = new ValidateReturn(true, "");
+                if (address == "")
+                {
+                    validateReturn.Message = "Nie podano adresu."
+                    validateReturn.Pass = false;
+                }
+                return validateReturn;
+            }
+
+
             
         </script>
     </body>
