@@ -17,3 +17,5 @@ Temat wiadomości e-mail:
 Klasa Imię Nazwisko nazwa_zadania
 
 2B Jan Kowalski 2022-06-Inf03 02 JS
+
+https://szczecinski.eu/docs/react/podstawowe-pojecia/basic
